@@ -57,8 +57,6 @@ To preprocess the test set, use the following:
 
 `python src/cifar100.py --dataset train --input_file /path/to/test --output_path /path/to/output/testing`
 
-**Note:** We assume that the filenames are kept intact from the original dataset. If they have been renamed, the constants can be easily changed inside `src/cifar10.py` to the appropriate filename.
-
 #### Grayscale
 
 The original images are coloured, you may optionally pass the `--grayscale` parameter to convert the images to grayscale.
