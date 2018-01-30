@@ -4,7 +4,7 @@ A tool for converting CIFAR-10 and CIFAR-100 datasest into PNG images with addit
 ## Introduction
 The tools provided are compatible with [CIFAR-10 and CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html) datasets which contains 32x32 images that are a subset of the [80 Million Tiny Images](http://people.csail.mit.edu/torralba/tinyimages/) dataset. 
 
-CIFAR-10 dataset contains 60,000 32x32 colour images in 10 classes, with 6,000 images per class. There are 50,000 training images and 10,000 test images. CIFAR-100 is similar the CIFAR-10, except it has 100 classes containing 600 images each. There are 500 training images and 100 testing images per class.
+CIFAR-10 dataset contains 60,000 32x32 colour images in 10 classes, with 6,000 images per class. There are 50,000 training images and 10,000 test images. CIFAR-100 is similar to CIFAR-10, except it has 100 classes containing 600 images each. There are 500 training images and 100 testing images per class.
 
 Benchmarks for the CIFAR-10 and CIFAR-100 datasets, and others can be found [here]https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html).
 
