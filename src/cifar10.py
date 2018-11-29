@@ -87,8 +87,8 @@ def parse_train_data(input_path):
     try:
         for filename in TRAIN_DATA_FILENAMES:
             data = utils.unpickle(os.path.join(input_path, filename))
-            features.append(data[b'data'])
-            labels.append(data[b'labels'])
+            features.append(data['data'])
+            labels.append(data['labels'])
     except Exception as ex:
         logging.error('Failed to load input files from: ' + args.input_path)
         logging.error('Exception: %s', ex)

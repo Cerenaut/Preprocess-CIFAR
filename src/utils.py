@@ -52,7 +52,7 @@ def unpickle(filepath):
     :param level: The path to a pickled file
     """
     with open(filepath, 'rb') as file:
-        data = pickle.load(file)
+        data = pickle.load(file, encoding='latin1')
     return data
 
 
