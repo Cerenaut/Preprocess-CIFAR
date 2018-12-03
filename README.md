@@ -40,7 +40,7 @@ To preprocess the training set, use the following:
 
 To preprocess the test set, use the following:
 
-`python src/cifar10.py --dataset train --input_folder /path/to/pickled/files --output_path /path/to/output/testing`
+`python src/cifar10.py --dataset test --input_folder /path/to/pickled/files --output_path /path/to/output/testing`
 
 **Note:** We assume that the filenames are kept intact from the original dataset. If they have been renamed, the constants can be easily changed inside `src/cifar10.py` to the appropriate filename.
 

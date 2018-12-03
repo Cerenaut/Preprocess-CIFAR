@@ -50,6 +50,15 @@ def setup_arg_parsing():
     parser.add_argument('--output_path', dest='output_path', required=True,
                         help='Path to folder for saving generated images')
 
+    parser.add_argument('--class_list', dest='class_list', required=False,
+                        help='List of classes to be selected'
+                             '(default=%(default)s).')
+
+
+    parser.add_argument('--nb_class', dest='nb_class', required=False,
+                        help='List of maximum number of elements per class to be selected, -1 for no limit'
+                             '(default=%(default)s).')
+
     parser.add_argument('--grayscale', dest='grayscale', action='store_true',
                         required=False, help='Convert images to grayscale '
                                              '(default=%(default)s).')
@@ -58,6 +67,8 @@ def setup_arg_parsing():
                         help='Logging level (default=%(default)s). '
                              'Options: debug, info, warning, error, critical')
 
+    parser.set_defaults(class_list='[0,1,2,3,4,5,6,7,8,9]')
+    parser.set_defaults(nb_class='[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]')
     parser.set_defaults(grayscale=False)
     parser.set_defaults(logging='warning')
 
@@ -87,8 +98,8 @@ def parse_train_data(input_path):
     try:
         for filename in TRAIN_DATA_FILENAMES:
             data = utils.unpickle(os.path.join(input_path, filename))
-            features.append(data[b'data'])
-            labels.append(data[b'labels'])
+            features.append(data['data'])
+            labels.append(data['labels'])
     except Exception as ex:
         logging.error('Failed to load input files from: ' + args.input_path)
         logging.error('Exception: %s', ex)
@@ -116,12 +127,12 @@ def parse_test_data(input_path):
         exit(1)
 
     # Prepare features
-    features = data[b'data']
+    features = data['data']
     features = features.reshape(features.shape[0], 3, 32, 32)
     features = features.transpose(0, 2, 3, 1).astype('uint8')
 
     # Prepare labels
-    labels = np.asarray(data[b'labels'])
+    labels = np.asarray(data['labels'])
 
     return features, labels
 
@@ -155,7 +166,7 @@ def main():
 
     # Start preprocessing images
     utils.preprocess(args.dataset, features, labels, args.output_path,
-                     args.grayscale)
+                     args.grayscale, args.class_list, args.nb_class)
 
 if __name__ == '__main__':
     main()

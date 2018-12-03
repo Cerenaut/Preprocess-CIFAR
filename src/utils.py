@@ -21,7 +21,7 @@ import numpy as np
 
 from PIL import Image
 
-NUM_RANDOM = 6
+NUM_RANDOM = 10
 DISPLAY_STEP = 1000
 
 
@@ -52,7 +52,7 @@ def unpickle(filepath):
     :param level: The path to a pickled file
     """
     with open(filepath, 'rb') as file:
-        data = pickle.load(file)
+        data = pickle.load(file, encoding='latin1')
     return data
 
 
@@ -77,11 +77,12 @@ def generate_filename(dataset, label, label_count):
     :param label_count: The number of times label has been seen already
     """
     random = binascii.hexlify(os.urandom(NUM_RANDOM // 2)).decode()
-    filename = '%s_%s_%i_%i.png' % (dataset, random, label, label_count)
+    # filename = '%s_%s_%i_%i.png' % (dataset, random, label, label_count)
+    filename = '%s.png' % (random)
     return filename
 
 
-def preprocess(dataset, features, labels, target_path, grayscale=False):
+def preprocess(dataset, features, labels, target_path, grayscale=False, class_list='[0,1,2,3,4,5,6,7,8,9]', nb_class=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]):
     """
     Map the specified level to the numerical value level for the logger
 
@@ -93,28 +94,47 @@ def preprocess(dataset, features, labels, target_path, grayscale=False):
     num_labels = len(np.unique(labels))
     label_count = init_label_count(num_labels)
 
+    if dataset == 'train':
+        train = True
+    else:
+        train = False
+
     # Get size of the data
     size = features.shape[0]
 
+    class_list = class_list.replace('[','')
+    class_list = class_list.replace(']','')
+    class_list = [int(s) for s in class_list.split(',')]
+
+    nb_class = nb_class.replace('[','')
+    nb_class = nb_class.replace(']','')
+    nb_class = [int(s) for s in nb_class.split(',')]
+
     for i in range(size):
         label = labels[i]
+        if label in class_list:
+            count = 0
+            if label in label_count:
+                count = label_count[label]
+                count += 1
+            label_count[label] = count
+            if nb_class[label]==-1 or count<=nb_class[label]:
+                filename = generate_filename(dataset, label, label_count[label])
+                if train:
+                    new_target_path = os.path.join(target_path,str(label))
+                    filepath = os.path.join(new_target_path, filename)
+                else:
+                    filepath = os.path.join(target_path, filename)
+                    if nb_class[label]==1:
+                        print(filename)
+                image = Image.fromarray(features[i])
 
-        count = 0
-        if label in label_count:
-            count = label_count[label]
-            count += 1
-        label_count[label] = count
+                if grayscale:
+                    image = image.convert('L')
+                else:
+                    image = image.convert('RGB')
 
-        filename = generate_filename(dataset, label, label_count[label])
-        filepath = os.path.join(target_path, filename)
-        image = Image.fromarray(features[i])
+                image.save(filepath)
 
-        if grayscale:
-            image = image.convert('L')
-        else:
-            image = image.convert('RGB')
-
-        image.save(filepath)
-
-        if i % DISPLAY_STEP == 0 or i == 1:
-            logging.info('Step #%i: saved %s', i, filename)
+                if i % DISPLAY_STEP == 0 or i == 1:
+                    logging.info('Step #%i: saved %s', i, filename)
